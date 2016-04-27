@@ -11,7 +11,6 @@ end
 
 group :development do
   gem 'sqlite3'
-  gem 'web-console', '~> 2.0'
 end
 
 gem 'sass-rails', '~> 5.0'
@@ -25,13 +24,14 @@ gem 'pry'
 gem 'devise'
 
 group :development, :test do
-  gem 'faker'
+  gem 'faker' # Adds random data for development and testing
   gem 'spring'
+  
   gem 'rspec-rails','~>3.0'
-	gem 'shoulda-matchers','~>3.0'
-	gem 'pry-rails'
-	gem 'pry-byebug'
-	gem 'better_errors'
-	gem 'binding_of_caller'
+  gem 'shoulda-matchers','~>3.0'
+  gem 'pry-rails'
+  gem 'pry-byebug'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 	gem 'factory_girl_rails', '~> 4.0'
 end
