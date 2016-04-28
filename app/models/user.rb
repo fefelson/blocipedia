@@ -7,13 +7,15 @@ class User < ActiveRecord::Base
 
   before_save -> { self.email = email.downcase }, if: -> { email.present? }
 
-  validates_presence_of :name
-  validates_uniqueness_of :name, { case_sensitive: false}
-  validates_length_of :name, {minimum: 4, maximum: 10}
+  after_create :send_new_user_email, if: -> { valid? }
 
-  validates_length_of :email, minimum: 3
+  validates :name, uniqueness: { case_sensitive: false },
+                   presence: true,
+                   length: {minimum: 4, maximum: 10}
 
-  after_create :send_new_user_email , if: -> {email.present? & name.present?}
+  validates :email, uniqueness: { case_sensitive: false },
+                    presence: true,
+                    length: { minimum: 3 }
 
   private
 

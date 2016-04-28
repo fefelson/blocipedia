@@ -25,4 +25,8 @@ module RandomData
     letters[0,rand(5..8)].join
   end
 
+  def self.random_email
+    "#{random_word}@#{random_word}.#{random_word}"
+  end
+  
 end
