@@ -22,7 +22,7 @@ module RandomData
   def self.random_word
     letters = ('a'..'z').to_a
     letters.shuffle!
-    letters[0,rand(4..8)].join
+    letters[0,rand(5..8)].join
   end
 
 end

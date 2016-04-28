@@ -8,6 +8,10 @@ RSpec.describe User, type: :model do
     it { should have_db_column(:email).of_type(:string) }
   end
 
+  describe "associations" do
+    it { should have_many(:wikis) }
+  end
+
   describe "validations" do
     #name
     it { is_expected.to validate_presence_of(:name)}

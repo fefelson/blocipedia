@@ -1,0 +1,25 @@
+<h1>Wikis</h1>
+
+<div class="row">
+  <% @wikis.each do |wiki| %>
+    <div class="media">
+      <div class="media-body">
+        <h4 class="media-heading">
+          <div class="col-md-8">
+            <%= link_to wiki.title, wiki %>
+          </div>
+          <div class="col-md-3">
+            <%= link_to "edit", wiki_edit_path %>
+          </div>
+          <div class="col-md-3">
+            <%= link_to "delete", wiki_delete_path %>
+          </div>
+        </h4>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="col-md-4">
+    <%= link_to "New Wiki", new_wiki_path, class: 'btn btn-success' %>
+  </div>
+</div>
