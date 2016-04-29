@@ -20,4 +20,16 @@ end
 users = User.all
 puts "#{users.count} users created."
 
+# Create wikis
+35.times do |i|
+  wiki = Wiki.create!(
+    title: "#{i} " + RandomData.random_sentence,
+    body: RandomData.random_paragraph,
+    user: users.sample,
+    private: false
+  )
+end
+wikis = Wiki.all
+puts "#{wikis.count} wikis created."
+
 puts "Seed finished"
