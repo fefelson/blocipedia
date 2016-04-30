@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
 
   before_save -> { self.email = email.downcase }, if: -> { email.present? }
 
+  after_initialize -> { self.role ||= :standard }
+
   after_create :send_new_user_email, if: -> { valid? }
 
   validates :name, uniqueness: { case_sensitive: false },
@@ -16,6 +18,8 @@ class User < ActiveRecord::Base
   validates :email, uniqueness: { case_sensitive: false },
                     presence: true,
                     length: { minimum: 3 }
+
+  enum role: [:admin, :standard, :premium]
 
   private
 

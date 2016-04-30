@@ -1,0 +1,4 @@
+class WikiPolicy < ApplicationPolicy
+
+  
+end

@@ -22,11 +22,12 @@ gem 'bootstrap-sass'
 gem 'figaro'
 gem 'pry'
 gem 'devise'
+gem 'pundit'
 
 group :development, :test do
   gem 'faker' # Adds random data for development and testing
   gem 'spring'
-  
+
   gem 'rspec-rails','~>3.0'
   gem 'shoulda-matchers','~>3.0'
   gem 'pry-rails'

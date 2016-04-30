@@ -6,6 +6,11 @@ RSpec.describe User, type: :model do
   describe "attributes" do
     it { should have_db_column(:name).of_type(:string) }
     it { should have_db_column(:email).of_type(:string) }
+    it { should have_db_column(:role).of_type(:integer) }
+    it { should define_enum_for(:role) }
+    it { is_expected.to respond_to(:admin?) }
+    it { is_expected.to respond_to(:standard?) }
+    it { is_expected.to respond_to(:premium?) }
   end
 
   describe "associations" do
