@@ -1,0 +1,25 @@
+<h1>User Page</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    User Name:
+  </div>
+  <div class="col-md-1">
+    <%= @user.name %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    User Email:
+  </div>
+  <div class="col-md-1">
+    <%= @user.email %>
+  </div>
+</div>
+<div class="row">
+  <% if @user.standard? %>
+    <%= link_to "Upgrade", new_charge_path , class: 'btn btn-success' %>
+  <% else %>
+    <%= link_to "Downgrade", user_downgrade_path(current_user.id), class: 'btn btn-success', method: :post %>
+  <% end %>
+</div>

@@ -23,6 +23,7 @@ gem 'figaro'
 gem 'pry'
 gem 'devise'
 gem 'pundit'
+gem 'stripe'
 
 group :development, :test do
   gem 'faker' # Adds random data for development and testing

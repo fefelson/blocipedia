@@ -7,6 +7,7 @@ RSpec.describe WikisController, type: :controller do
   let(:other_user) { create(:user, name: 'eddd')}
   let(:my_wiki) { create(:wiki, user: my_user)}
   let(:other_wiki) { create(:wiki, user: other_user)}
+
   context "guest" do
 
     describe "GET index" do
