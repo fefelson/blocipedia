@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :confirmable, :trackable, :validatable
 
   has_many :wikis # (?) dependent: :destroy
 
