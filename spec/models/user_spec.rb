@@ -30,6 +30,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to allow_value("user@blocipedia.com").for(:email)}
     it { is_expected.to validate_presence_of(:email)}
     it { should validate_uniqueness_of(:email).case_insensitive }
+    #role
+    it { is_expected.to validate_presence_of(:role)}
   end
 
   describe "after_create" do
