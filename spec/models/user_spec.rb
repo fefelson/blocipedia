@@ -30,11 +30,13 @@ RSpec.describe User, type: :model do
     it { is_expected.to allow_value("user@blocipedia.com").for(:email)}
     it { is_expected.to validate_presence_of(:email)}
     it { should validate_uniqueness_of(:email).case_insensitive }
+    #role
+    it { is_expected.to validate_presence_of(:role)}
   end
 
   describe "after_create" do
     before do
-      @user = User.new(name: 'FEFelson', email: 'edwrdwalsh@gmail.com', password: 'password')
+      @user = User.new(name: 'FEFelson', email: 'edwrdwalsh@gmail.com', password: 'password', role: :standard)
     end
 
     it "sends an email to users who have signed up" do
