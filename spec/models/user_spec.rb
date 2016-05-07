@@ -36,7 +36,7 @@ RSpec.describe User, type: :model do
 
   describe "after_create" do
     before do
-      @user = User.new(name: 'FEFelson', email: 'edwrdwalsh@gmail.com', password: 'password')
+      @user = User.new(name: 'FEFelson', email: 'edwrdwalsh@gmail.com', password: 'password', role: :standard)
     end
 
     it "sends an email to users who have signed up" do
