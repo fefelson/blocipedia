@@ -1,5 +1,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
 
+  skip_after_action(:verify_authorized, :verify_policy_scoped)
+
   def new
     @user = User.new
   end
@@ -10,7 +12,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user.email = params[:user][:email]
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
-
+    @user.role = :standard
+    
     if @user.save
       flash[:notice] = "Welcome to Blocipedia #{@user.name}!"
       create_session(@user)
@@ -21,5 +24,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
       render :new
     end
   end
-  
+
 end

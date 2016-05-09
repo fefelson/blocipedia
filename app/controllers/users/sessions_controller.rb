@@ -1,5 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
 
+  skip_after_action(:verify_authorized, :verify_policy_scoped)
+
   # def create
   #   user = User.find_by(email: params[:session][:email].downcase)
   #   if user && user.authenticate(params[:session][:password])

@@ -2,6 +2,7 @@ class ChargesController < ApplicationController
   include Amount
 
   before_action :require_sign_in
+  skip_after_action(:verify_authorized, :verify_policy_scoped)
 
   def create
 

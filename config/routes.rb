@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    sessions: 'users/sessions',
+    confirmations: 'users/confirmations'
   }
 
   resources :wikis
@@ -18,6 +20,6 @@ Rails.application.routes.draw do
 
   get 'about' => 'welcome#about'
 
-  root 'welcome#index'
+  root 'wikis#index'
 
 end

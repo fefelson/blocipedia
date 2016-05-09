@@ -5,7 +5,8 @@ require 'random_data'
   User.create!(
     name: "#{i}_" + RandomData.random_word,
     email: RandomData.random_email,
-    password: 'password'
+    password: 'password',
+    role: :standard
   )
 end
 
@@ -13,7 +14,8 @@ unless User.find_by(email: 'admin@example.com')
   User.create!(
     name: 'admin',
     email: 'admin@example.com',
-    password: 'helloworld'
+    password: 'helloworld',
+    role: :admin
   )
 end
 

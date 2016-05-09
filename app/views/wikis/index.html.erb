@@ -7,6 +7,9 @@
         <h4 class="media-heading">
           <div class="col-md-4">
             <%= link_to wiki.title, wiki %>
+            <% if wiki.private? %>
+               - private
+            <% end %>
           </div>
           <div class="col-md-1">
             <%= link_to "edit", edit_wiki_path(wiki), class: 'btn btn-success'  %>

@@ -1,4 +1,7 @@
 class Users::ConfirmationsController < Devise::ConfirmationsController
+
+  skip_after_action(:verify_authorized, :verify_policy_scoped)
+
   # GET /resource/confirmation/new
   # def new
   #   super
