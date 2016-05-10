@@ -80,6 +80,7 @@ RSpec.describe WikisController, type: :controller do
     context "standard user" do
       before do
         create_session(my_user)
+        sign_in my_user
       end
 
       describe "GET index" do
