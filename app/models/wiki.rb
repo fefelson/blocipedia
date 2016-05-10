@@ -8,5 +8,13 @@ class Wiki < ActiveRecord::Base
 
   def public!
     self.private = false
-   end
+  end
+  
+  def public?
+    self.!private
+  end
+  
+  def private?
+    self.private
+  end
 end

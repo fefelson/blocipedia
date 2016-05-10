@@ -18,8 +18,8 @@ class WikiPolicy < ApplicationPolicy
 
   def update?
     return false unless user.present?
-    return true if user.admin? || user.premium?
-    record.private? || record.params_private ? false : true
+    return true if user.admin?
+    record.user == user && ( record.public? || user.role == 'premium' ) 
   end
 
   def destroy?
