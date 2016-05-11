@@ -23,7 +23,7 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.present? && user.admin?  
+    user.present? && user.admin?
   end
 
 
@@ -31,8 +31,8 @@ class WikiPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       return scope.where(private: false) unless user
-      user.admin? || user.premium? ? scope.all : scope.where(private: false)
+      user.admin? || user.premium? ? scope : scope.where(private: false)
     end
   end
-
+1
 end
