@@ -10,11 +10,9 @@ class UsersController < ApplicationController
   def downgrade
     @user = User.find(params[:user_id])
     @user.standard!
-    Wiki.where({user_id: @user.id, private: true}).find_each do |wiki|
+    Wiki.where({user_id: @user.id}).find_each do |wiki|
       wiki.public!
     end
-
-
 
     redirect_to :back
   end

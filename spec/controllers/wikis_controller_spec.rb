@@ -17,10 +17,10 @@ RSpec.describe WikisController, type: :controller do
 
         it "assigns Wiki.all to wikis" do
           get :index
-          expect(assigns(:wikis)).to eq([my_wiki])
+          expect(assigns(:wikis)).to eq([my_wiki, other_wiki])
         end
 
-        it "does not include private topics in @topics" do
+        it "does not include private wikis in @wikis" do
           get :index
           expect(assigns(:wikis)).not_to include(private_wiki)
         end
@@ -65,7 +65,7 @@ RSpec.describe WikisController, type: :controller do
       describe "GET edit" do
         it "returns http redirect" do
           get :edit, { id: my_wiki.id }
-          expect(response).to redirect_to(new_user_session_path)
+          expect(response).to redirect_to new_user_session_path
         end
       end
 
@@ -75,7 +75,7 @@ RSpec.describe WikisController, type: :controller do
           new_body = RandomData.random_paragraph
 
           put :update, id: my_wiki.id, wiki: { title: new_title, body: new_body, private: true }
-          expect(response).to redirect_to(new_user_session_path)
+          expect(response).to redirect_to new_user_session_path
         end
       end
 
@@ -99,16 +99,16 @@ RSpec.describe WikisController, type: :controller do
           expect(response).to have_http_status(:success)
         end
 
-           it "assigns Wiki.all to wikis" do
-             get :index
-             expect(assigns(:wikis)).to eq([my_wiki])
-           end
+        it "assigns Wiki.all to wikis" do
+          get :index
+          expect(assigns(:wikis)).to eq([my_wiki, other_wiki])
+        end
 
-           it "does not include private wikis in @wikis" do
-             get :index
-             expect(assigns(:wikis)).not_to include(private_wiki)
-           end
-         end
+        it "does not include private wikis in @wikis" do
+          get :index
+          expect(assigns(:wikis)).not_to include(private_wiki)
+        end
+      end
 
       describe "GET show" do
         it "returns http success" do
@@ -170,7 +170,7 @@ RSpec.describe WikisController, type: :controller do
 
         it " redirects private wiki to user page" do
           post :create, {wiki:  { title: RandomData.random_word, body: RandomData.random_paragraph, private: true }}
-          expect(response).to redirect_to(user_path(my_user.id))
+          expect(response).to redirect_to user_path(my_user.id)
         end
       end
 
@@ -194,9 +194,11 @@ RSpec.describe WikisController, type: :controller do
           expect(wiki_instance.body).to eq my_wiki.body
         end
 
-        it "redirects to user path for private wiki" do
-          get :edit, { id: private_wiki.id }
-          expect(response).to redirect_to(user_path(my_user.id))
+        describe "private wiki" do
+          it "redirects to user page" do
+            get :edit, { id: private_wiki.id }
+            expect(response).to redirect_to user_path(my_user.id)
+          end
         end
       end
 
@@ -219,74 +221,33 @@ RSpec.describe WikisController, type: :controller do
           put :update, id: my_wiki.id, wiki: { title: new_title, body: new_body }
           expect(response).to redirect_to my_wiki
         end
+      end
 
-        it "does not update public wiki to private" do
-          put :update, id: my_wiki.id, wiki: { private: true }
-          updated_wiki = assigns(:wiki)
-          expect(updated_wiki.private).to eq(false)
-        end
+      describe "private wiki" do
+        it "redirects to user page when trying to make a public wiki private" do
 
-        it "redirects to user path for making public wiki private" do
           put :update, id: my_wiki.id, wiki: { private: true }
-          expect(response).to redirect_to(user_path(my_user.id))
+          expect(response).to redirect_to user_path(my_user.id)
         end
       end
 
       describe "DELETE destroy" do
-        it "deletes the wiki" do
+        it "redirects to referrer " do
+          request.env["HTTP_REFERER"] = root_path
           delete :destroy, {id: my_wiki.id}
-          count = Wiki.count
-          expect(count).to eq 1
-        end
-
-        it "redirects to wiki index" do
-          delete :destroy, {id: my_wiki.id}
-          expect(response).to redirect_to user_path(my_user.id)
-        end
-
-        it "redirects to user path for private wiki" do
-          delete :destroy, {id: private_wiki.id }
-          expect(response).to redirect_to user_path(my_user.id)
+          expect(response).to redirect_to request.referrer
         end
       end
 
       describe "A wiki the user doesnt own" do
-        it "GET edit returns http success" do
+        it "GET edit redirects to user page" do
           get :edit, { id: other_wiki.id }
-          expect(response).to have_http_status(:success)
+          expect(response).to redirect_to user_path(my_user)
         end
 
-        it "GET edit renders the #edit view" do
-          get :edit, { id: other_wiki.id }
-          expect(response).to render_template :edit
-        end
-
-        it "GET edit assigns wiki to be updated to @wiki" do
-          get :edit, { id: other_wiki.id }
-          wiki_instance = assigns(:wiki)
-
-          expect(wiki_instance.id).to eq other_wiki.id
-          expect(wiki_instance.title).to eq other_wiki.title
-          expect(wiki_instance.body).to eq other_wiki.body
-        end
-
-        it "PUT update updates topic with expected attributes" do
-          new_title = RandomData.random_word
-          new_body = RandomData.random_paragraph
-
-          put :update, id: other_wiki.id, wiki: { title: new_title, body: new_body }
-          updated_wiki = assigns(:wiki)
-          expect(updated_wiki.id).to eq other_wiki.id
-          expect(updated_wiki.title).to eq new_title
-          expect(updated_wiki.body).to eq new_body
-        end
-
-        it "PUT update redirects to the updated wiki" do
-          new_title = RandomData.random_word
-          new_body = RandomData.random_paragraph
-
-          put :update, id: other_wiki.id, wiki: { title: new_title, body: new_body }
-          expect(response).to redirect_to other_wiki
+        it "PUT update redirects to user page" do
+          put :update, id: my_wiki.id, wiki: { private: true }
+          expect(response).to redirect_to user_path(my_user)
         end
       end
     end
@@ -306,7 +267,7 @@ RSpec.describe WikisController, type: :controller do
 
         it "assigns Wiki.all to wikis" do
           get :index
-          expect(assigns(:wikis)).to eq([my_wiki, private_wiki])
+          expect(assigns(:wikis)).to eq([my_wiki, other_wiki, private_wiki])
         end
       end
 
@@ -359,7 +320,6 @@ RSpec.describe WikisController, type: :controller do
           get :new
           expect(assigns(:wiki)).not_to be_nil
         end
-
       end
 
       describe "POST create" do
@@ -414,24 +374,24 @@ RSpec.describe WikisController, type: :controller do
           expect(wiki_instance.body).to eq my_wiki.body
         end
 
-        describe "private wiki" do
-          it "returns http success" do
-            get :edit, { id: private_wiki.id }
+        describe "make public wiki private" do
+          it "returns http status success" do
+            get :edit, { id: my_wiki.id, private: true }
             expect(response).to have_http_status(:success)
           end
 
           it "renders the #edit view" do
-            get :edit, { id: private_wiki.id }
+            get :edit, { id: my_wiki.id, private: true }
             expect(response).to render_template :edit
           end
 
           it "assigns wiki to be updated to @wiki" do
-            get :edit, { id: private_wiki.id }
+            get :edit, { id: my_wiki.id, private: true }
             wiki_instance = assigns(:wiki)
 
-            expect(wiki_instance.id).to eq private_wiki.id
-            expect(wiki_instance.title).to eq private_wiki.title
-            expect(wiki_instance.body).to eq private_wiki.body
+            expect(wiki_instance.id).to eq my_wiki.id
+            expect(wiki_instance.title).to eq my_wiki.title
+            expect(wiki_instance.body).to eq my_wiki.body
           end
         end
       end
@@ -480,15 +440,22 @@ RSpec.describe WikisController, type: :controller do
       end
 
       describe "DELETE destroy" do
-        it "does not delete the wiki" do
+        it "redirects to referrer" do
+          request.env["HTTP_REFERER"] = root_path
           delete :destroy, {id: my_wiki.id}
-          count = Wiki.count
-          expect(count).to eq 1
+          expect(response).to redirect_to request.referrer
+        end
+      end
+
+      describe "A wiki the user doesnt own" do
+        it "GET edit redirects to user page" do
+          get :edit, { id: other_wiki.id }
+          expect(response).to redirect_to user_path(my_user)
         end
 
-        it "redirects to wiki" do
-          delete :destroy, {id: my_wiki.id}
-          expect(response).to redirect_to user_path(my_user.id)
+        it "PUT update redirects to user page" do
+          put :update, id: other_wiki.id, wiki: { private: true }
+          expect(response).to redirect_to user_path(my_user)
         end
       end
     end
@@ -508,7 +475,7 @@ RSpec.describe WikisController, type: :controller do
 
         it "assigns Wiki.all to wikis" do
           get :index
-          expect(assigns(:wikis)).to eq([my_wiki, private_wiki])
+          expect(assigns(:wikis)).to eq([my_wiki, other_wiki, private_wiki])
         end
       end
 
@@ -561,7 +528,6 @@ RSpec.describe WikisController, type: :controller do
           get :new
           expect(assigns(:wiki)).not_to be_nil
         end
-
       end
 
       describe "POST create" do
@@ -706,6 +672,50 @@ RSpec.describe WikisController, type: :controller do
           end
         end
       end
-    end
 
-end
+      describe "A wiki the user doesnt own" do
+        describe "GET edit" do
+          it "returns http success" do
+            get :edit, { id: other_wiki.id }
+            expect(response).to have_http_status(:success)
+          end
+
+          it "renders the #edit view" do
+            get :edit, { id: other_wiki.id }
+            expect(response).to render_template :edit
+          end
+
+          it "assigns wiki to be updated to @wiki" do
+            get :edit, { id: other_wiki.id }
+            wiki_instance = assigns(:wiki)
+
+            expect(wiki_instance.id).to eq other_wiki.id
+            expect(wiki_instance.title).to eq other_wiki.title
+            expect(wiki_instance.body).to eq other_wiki.body
+          end
+        end
+
+        describe "PUT update" do
+          it "updates topic with expected attributes" do
+            new_title = RandomData.random_word
+            new_body = RandomData.random_paragraph
+
+            put :update, id: other_wiki.id, wiki: { title: new_title, body: new_body, private: true }
+            updated_wiki = assigns(:wiki)
+            expect(updated_wiki.id).to eq other_wiki.id
+            expect(updated_wiki.title).to eq new_title
+            expect(updated_wiki.body).to eq new_body
+            expect(updated_wiki.private).to eq(true)
+          end
+
+          it "redirects to the updated wiki" do
+            new_title = RandomData.random_word
+            new_body = RandomData.random_paragraph
+
+            put :update, id: other_wiki.id, wiki: { title: new_title, body: new_body }
+            expect(response).to redirect_to other_wiki
+          end
+        end
+      end
+    end
+  end
