@@ -5,10 +5,12 @@ class Wiki < ActiveRecord::Base
   validates :title, length: {minimum: 5}, presence: true
   validates :body, length: {minimum: 15}, presence: true
 
+  def private?
+    private
+  end
 
   def public!
-    puts "here"
-    update_attribute(:pravate, false)
+    update_attributes(private: false)
   end
 
 end

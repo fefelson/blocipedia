@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :wikis
 
   resources :users, only: [:show] do
-    post '/downgrade' => 'users#downgrade', as: :downgrade
+    post :downgrade, on: :member
   end
 
 

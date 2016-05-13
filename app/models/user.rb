@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
 
   validates :name, uniqueness: { case_sensitive: false },
             presence: true,
-            length: {minimum: 4, maximum: 10}
+            length: {minimum: 4, maximum: 26}
 
   validates :email, uniqueness: { case_sensitive: false },
             presence: true,
@@ -21,6 +21,13 @@ class User < ActiveRecord::Base
                     
   validates :role, presence: true,
             inclusion: { in: roles.keys , message: "%{value} is not a valid role" }
+            
+  def downgrade!
+    ActiveRecord::Base.transaction do
+      standard!
+      wikis.each(& :public!)
+    end
+  end
 
   private
 

@@ -8,12 +8,12 @@ class UsersController < ApplicationController
   end
 
   def downgrade
-    @user = User.find(params[:user_id])
-    @user.standard!
-    Wiki.where({user_id: @user.id}).find_each do |wiki|
-      wiki.public!
+    @user = User.find(params[:id])
+    if @user.downgrade!
+      flash[:notice] = "something"
+    else
+      flash[:error] = "something else"
     end
-
     redirect_to :back
   end
 

@@ -53,12 +53,15 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe "Downgrade Premium" do
-      let(:private_wiki) {create(:wiki, user: my_user, private: true)}
+      before :example do
+        @user = create(:user, role: 'premium') 
+        @private_wiki = create( :wiki, user: @user, private: true)
+      end
 
       it "turns private user wikis to public" do
-        request.env["HTTP_REFERER"] = user_path(my_user)
-        post :downgrade, {user_id: my_user.id}
-        expect(private_wiki.private?).to eq false
+        request.env["HTTP_REFERER"] = user_path(@user)
+        post :downgrade, { id: @user.id }
+        expect(Wiki.first.private).to eq false
       end
     end
   end
