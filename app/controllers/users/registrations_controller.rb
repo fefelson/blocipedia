@@ -13,10 +13,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user.password = params[:user][:password]
     @user.password_confirmation = params[:user][:password_confirmation]
     @user.role = :standard
-    
+
     if @user.save
       flash[:notice] = "Welcome to Blocipedia #{@user.name}!"
-      create_session(@user)
+      sign_in(@user)
       redirect_to root_path
 
     else
