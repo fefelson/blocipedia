@@ -718,4 +718,19 @@ RSpec.describe WikisController, type: :controller do
         end
       end
     end
+
+    describe "Add Collaborator" do
+      before do
+        my_user.confirm
+        sign_in(my_user)
+        @wiki = create(:wiki, user: my_user)
+        @other_user = create(:user)
+      end
+
+
+
+
+
+    end
+
   end

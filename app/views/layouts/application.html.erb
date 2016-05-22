@@ -14,7 +14,7 @@
 
       <div class="pull-right user-info">
         <% if user_signed_in? %>
-          <% if current_user.standard? %>
+          <% if current_user.present? && current_user.standard? %>
             <%= link_to "Upgrade", new_charge_path, class: 'btn btn-success' %>
           <% end %>
           Signed in as: <strong><%= link_to current_user.name, user_path(current_user.id), :class => 'navbar-link' %></strong> |

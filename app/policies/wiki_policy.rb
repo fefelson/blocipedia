@@ -6,6 +6,7 @@ class WikiPolicy < ApplicationPolicy
     end
 
   def update?
+    return false unless user.present?
     if record.private?
       return false unless user.premium? || user.admin?
     end

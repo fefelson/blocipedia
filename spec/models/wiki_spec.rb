@@ -10,6 +10,8 @@ RSpec.describe Wiki, type: :model do
 
   describe 'associations' do
     it { should belong_to(:user) }
+    it { should have_many(:collaborations) }
+    it { should have_many(:users).through(:collaborations)}
   end
 
   describe 'validations' do
@@ -17,6 +19,23 @@ RSpec.describe Wiki, type: :model do
     it { is_expected.to validate_presence_of(:body)}
     it { is_expected.to validate_length_of(:title).is_at_least(5)}
     it { is_expected.to validate_length_of(:body).is_at_least(15)}
+  end
+
+  describe 'collaborations' do
+    before do
+      @user = create(:user)
+      @wiki = create(:wiki, user: @user)
+      @other_user = create(:user)
+    end
+
+    it "returns 'nil' if the wiki has no collaborators" do
+      expect(@wiki.users).to be_empty
+    end
+
+    it "returns the users if they exist" do
+      @wiki.users << @other_user
+      expect(@wiki.users).to eq([@other_user])
+    end
   end
 
 end

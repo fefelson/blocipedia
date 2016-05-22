@@ -6,10 +6,12 @@ class User < ActiveRecord::Base
   enum role: [:standard, :premium, :admin]
 
   has_many :wikis # (?) dependent: :destroy
+  has_many :collaborations
+  has_many :shared_wikis, through: :collaborations, source: :wiki
 
   before_save -> { self.email = email.downcase }, if: -> { email.present? }
 
-  after_create :send_new_user_email, if: -> { valid? }
+  # after_create :send_new_user_email, if: -> { valid? }
 
   validates :name, uniqueness: { case_sensitive: false },
             presence: true,
@@ -18,10 +20,10 @@ class User < ActiveRecord::Base
   validates :email, uniqueness: { case_sensitive: false },
             presence: true,
             length: { minimum: 3 }
-                    
+
   validates :role, presence: true,
             inclusion: { in: roles.keys , message: "%{value} is not a valid role" }
-            
+
   def downgrade!
     ActiveRecord::Base.transaction do
       standard!

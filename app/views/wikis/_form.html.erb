@@ -25,6 +25,11 @@
       <% end %>
     </div>
   <% end %>
+  <% if current_user == @wiki.user || current_user.admin? %> 
+  <div class="form-group">
+     <%= f.collection_check_boxes(:user_ids, @other_users, :id, :name) %>
+  </div>
+  <% end %>
   <div class="form-group">
     <%= f.submit "Save", class: 'btn btn-success' %>
   </div>

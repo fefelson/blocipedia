@@ -15,6 +15,8 @@ class WikisController < ApplicationController
     @wiki = Wiki.new
     authorize @wiki
 
+    @other_users = User.all - [current_user]
+
   end
 
   def create
@@ -34,10 +36,13 @@ class WikisController < ApplicationController
   def edit
     @wiki = Wiki.find(params[:id])
     authorize @wiki
+    @other_users = User.all - [current_user]
+
   end
 
   def update
     @wiki = Wiki.find(params[:id])
+    @wiki.user_ids = params[:wiki][:user_ids]
     @wiki.assign_attributes(wiki_params)
     authorize @wiki
 
@@ -66,7 +71,7 @@ class WikisController < ApplicationController
   private
 
   def wiki_params
-    params.require(:wiki).permit(:title, :body, :private)
+    params.require(:wiki).permit(:title, :body, :private, :user_ids)
   end
 
 end
