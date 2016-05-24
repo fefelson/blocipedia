@@ -28,7 +28,9 @@ class WikiPolicy < ApplicationPolicy
     def resolve
       return scope.where(private: false) unless user
       user.admin? || user.premium? ? scope.all : scope.where(private: false)
+      #premium users should see wikis that are public, wikis they own and wikis they are collaborators on. 
+      #regular users should see wikis that are public, wikis they own and wikis they are collaborators on.
+      scope.where() #users (collaborators) include the currentu user. http://guides.rubyonrails.org/active_record_querying.html#scopes
     end
   end
-1
 end

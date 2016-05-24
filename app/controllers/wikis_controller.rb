@@ -42,7 +42,6 @@ class WikisController < ApplicationController
     @wiki.user_ids = params[:wiki][:user_ids]
     @wiki.assign_attributes(wiki_params)
     authorize @wiki
-    binding.pry
 
     if @wiki.save
       flash[:notice] = "Wiki was updated."
