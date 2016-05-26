@@ -36,17 +36,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:role)}
   end
 
-  describe "after_create" do
-    before do
-      @user = User.new(name: 'FEFelson', email: 'edwrdwalsh@gmail.com', password: 'password', role: :standard)
-    end
-
-    it "sends an email to users who have signed up" do
-      expect(UserMailer).to receive(:new_user).with(@user).and_return(double(deliver_now: true))
-      @user.save!
-    end
-  end
-
   describe 'collaborations' do
     before do
       @user = create(:user)

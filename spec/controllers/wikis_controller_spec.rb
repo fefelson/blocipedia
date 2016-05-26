@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
-  let(:my_user) { create(:user)}
-  let(:other_user) { create(:user, name: 'eddd', role: :premium)}
-  let(:my_wiki) { create(:wiki, user: my_user)}
-  let(:other_wiki) { create(:wiki, user: other_user)}
-  let(:private_wiki) {create(:wiki, user: other_user, private: true )}
+  let!(:my_user) { create(:user)}
+  let!(:other_user) { create(:user, name: 'eddd', role: :premium)}
+  let!(:my_wiki) { create(:wiki, user: my_user)}
+  let!(:other_wiki) { create(:wiki, user: other_user)}
+  let!(:private_wiki) {create(:wiki, user: other_user, private: true )}
 
   context "guest" do
 
@@ -108,6 +108,12 @@ RSpec.describe WikisController, type: :controller do
           get :index
           expect(assigns(:wikis)).not_to include(private_wiki)
         end
+
+        it "includes private wikis it was added as a collaborator" do
+          private_wiki.users << my_user
+          get :index
+          expect(assigns(:wikis)).to include(private_wiki)
+        end
       end
 
       describe "GET show" do
@@ -128,7 +134,7 @@ RSpec.describe WikisController, type: :controller do
 
         it "does not show private wiki" do
           get :show, { id: private_wiki.id }
-          expect(response).to redirect_to(user_path)
+          expect(response).to redirect_to(user_path(my_user))
         end
       end
 
@@ -267,7 +273,7 @@ RSpec.describe WikisController, type: :controller do
 
         it "assigns Wiki.all to wikis" do
           get :index
-          expect(assigns(:wikis)).to eq([my_wiki, other_wiki, private_wiki])
+          expect(assigns(:wikis)).to eq([my_wiki, other_wiki])
         end
       end
 
@@ -651,7 +657,7 @@ RSpec.describe WikisController, type: :controller do
         it "deletes the wiki" do
           delete :destroy, {id: my_wiki.id}
           count = Wiki.count
-          expect(count).to eq 0
+          expect(count).to eq 2
         end
 
         it "redirects to wiki wiki index" do
@@ -663,7 +669,7 @@ RSpec.describe WikisController, type: :controller do
           it "deletes the wiki" do
             delete :destroy, {id: private_wiki.id}
             count = Wiki.count
-            expect(count).to eq 0
+            expect(count).to eq 2
           end
 
           it "redirects to wiki index" do

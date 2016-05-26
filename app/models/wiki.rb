@@ -10,6 +10,10 @@ class Wiki < ActiveRecord::Base
     private
   end
 
+  def public?
+    !private
+  end
+
   def public!
     update_attributes(private: false)
   end

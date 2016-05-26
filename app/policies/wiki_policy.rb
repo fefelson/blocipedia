@@ -3,7 +3,7 @@ class WikiPolicy < ApplicationPolicy
   def create?
     return user.present? unless record.private?
     user.present? && (user.admin? || user.premium?)
-    end
+  end
 
   def update?
     return false unless user.present?
@@ -26,10 +26,22 @@ class WikiPolicy < ApplicationPolicy
 
 
   class Scope < Scope
+
     def resolve
       return scope.where(private: false) unless user
-      user.admin? || user.premium? ? scope.all : scope.where(private: false)
+      all_wikis = scope.all
+      wikis = []
+      if user.admin?
+        wikis = all_wikis
+      else
+        all_wikis.each do |wiki|
+          if wiki.public? || wiki.user == user || wiki.users.include?(user)
+            wikis << wiki
+          end
+        end
+      end
+      wikis
     end
   end
-1
+
 end
