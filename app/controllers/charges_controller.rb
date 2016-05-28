@@ -11,7 +11,7 @@ class ChargesController < ApplicationController
       card: params[:stripeToken]
     )
 
-    charge = Stripe::Charge.create(
+    Stripe::Charge.create(
       customer: customer.id, #Note -- this is NOT the user_id in app
       amount: Amount.default,
       description: "BigMoney Membership - #{current_user.email}",

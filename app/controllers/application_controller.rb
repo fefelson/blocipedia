@@ -22,8 +22,8 @@ class ApplicationController < ActionController::Base
   def user_not_authorized exception
     flash[:alert] = "You are not authorized to do that."
 
-    if exception.query == "edit?" || exception.query == "update?" || exception.query == "create?"
-      redirect_to user_path(current_user)
+    if exception.query == "destroy?"
+      redirect_to :back
 
     elsif exception.query == "show?"
       unless user_signed_in?
@@ -31,9 +31,8 @@ class ApplicationController < ActionController::Base
       else
         redirect_to user_path(current_user)
       end
-      
-    elsif exception.query == "destroy?"
-      redirect_to :back
+    else
+      redirect_to user_path(current_user)
     end
   end
 
